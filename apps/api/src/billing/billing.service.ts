@@ -23,16 +23,17 @@ const PLAN_PRICES: Record<string, string> = {
 
 @Injectable()
 export class BillingService {
-  private stripe!: StripeInstance;
+  private stripe: StripeInstance | null = null;
 
   constructor(
     @InjectModel(Organization.name)
     private orgModel: Model<OrganizationDocument>,
     private config: ConfigService,
   ) {
-    this.stripe = new StripeLib(
-      config.get<string>('stripe.secretKey') ?? 'sk_test_placeholder',
-    ) as StripeInstance;
+    const key = config.get<string>('stripe.secretKey') ?? '';
+    if (key && key.startsWith('sk_')) {
+      this.stripe = new StripeLib(key) as StripeInstance;
+    }
   }
 
   async createCheckoutSession(orgId: string, plan: string, returnUrl: string) {
@@ -42,13 +43,8 @@ export class BillingService {
     const priceId = PLAN_PRICES[plan];
     if (!priceId) throw new BadRequestException('Invalid plan');
 
-    const secretKey = this.config.get<string>('stripe.secretKey') ?? '';
-    if (!secretKey || secretKey === 'sk_test_placeholder') {
-      // Return mock response in dev
-      return {
-        url: `${returnUrl}?success=true&plan=${plan}`,
-        mock: true,
-      };
+    if (!this.stripe) {
+      return { url: `${returnUrl}?success=true&plan=${plan}`, mock: true };
     }
 
     const session = await this.stripe.checkout.sessions.create({
@@ -66,9 +62,9 @@ export class BillingService {
 
   async handleWebhook(payload: Buffer, signature: string) {
     const webhookSecret = this.config.get<string>('stripe.webhookSecret') ?? '';
-    if (!webhookSecret) return { received: true };
+    if (!webhookSecret || !this.stripe) return { received: true };
 
-    let event: ReturnType<typeof this.stripe.webhooks.constructEvent>;
+    let event: { type: string; data: { object: unknown } };
     try {
       event = this.stripe.webhooks.constructEvent(
         payload,
