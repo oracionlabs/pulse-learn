@@ -15,7 +15,7 @@ export function MobileLearnerNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden border-t border-white/[0.06] bg-sidebar">
+    <nav className="flex md:hidden flex-shrink-0 border-t border-white/[0.06] bg-sidebar">
       {nav.map(({ label, href, icon: Icon }) => {
         const isActive = pathname === href || pathname.startsWith(href + '/')
         return (

@@ -5,12 +5,12 @@ export default function LearnerLayout({ children }: { children: React.ReactNode 
   return (
     <div className="flex h-full">
       <LearnerSidebar />
-      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
-        <div className="flex-1 overflow-auto pb-16 md:pb-0">
+      <div className="flex flex-col flex-1 overflow-hidden min-w-0 h-full">
+        <div className="flex-1 overflow-auto">
           {children}
         </div>
+        <MobileLearnerNav />
       </div>
-      <MobileLearnerNav />
     </div>
   )
 }
