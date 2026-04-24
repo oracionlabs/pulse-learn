@@ -68,7 +68,7 @@ export function AdminSidebar() {
   const { data: session } = useSession()
 
   return (
-    <aside className="flex h-screen w-56 flex-shrink-0 flex-col bg-sidebar border-r border-white/[0.06]">
+    <aside className="hidden md:flex h-screen w-56 flex-shrink-0 flex-col bg-sidebar border-r border-white/[0.06]">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-4 py-5 border-b border-white/[0.06]">
         <div className="flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)] bg-brand">

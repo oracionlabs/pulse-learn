@@ -26,7 +26,7 @@ export function LearnerSidebar() {
   const { data: session } = useSession()
 
   return (
-    <aside className="flex h-screen w-56 flex-shrink-0 flex-col bg-sidebar">
+    <aside className="hidden md:flex h-screen w-56 flex-shrink-0 flex-col bg-sidebar">
       <div className="flex items-center gap-2.5 px-4 py-5">
         <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-brand shadow-sm">
           <Zap className="h-4 w-4 text-white" />

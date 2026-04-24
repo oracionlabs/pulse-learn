@@ -91,12 +91,12 @@ export function Topbar({ title, action }: TopbarProps) {
   const count = unread?.count ?? 0
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border bg-white px-6">
+    <header className="flex h-14 items-center justify-between border-b border-border bg-white px-4 md:px-6">
       <h1 className="text-base font-semibold text-text-primary">{title}</h1>
 
       <div className="flex items-center gap-3">
-        {/* Search */}
-        <div className="flex h-8 w-56 items-center gap-2 rounded-[var(--radius-md)] border border-border bg-slate-50 px-3">
+        {/* Search — desktop only */}
+        <div className="hidden md:flex h-8 w-56 items-center gap-2 rounded-[var(--radius-md)] border border-border bg-slate-50 px-3">
           <Search className="h-3.5 w-3.5 text-text-muted" />
           <input
             placeholder="Search…"
