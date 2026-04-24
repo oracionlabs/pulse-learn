@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { NotFoundException } from '@nestjs/common';
 import { WorkshopsService } from './workshops.service';
-import { Workshop } from './schemas/workshop.schema';
+import { Workshop, type WorkshopDocument } from './schemas/workshop.schema';
 
 const mockWorkshop = {
   _id: 'workshop-id',
@@ -68,15 +68,15 @@ describe('WorkshopsService', () => {
       const workshop = {
         steps: [{ points: 10 }, { points: 15 }, { points: 20 }],
         totalPoints: 0,
-      } as never;
+      } as unknown as WorkshopDocument;
       service['recalcTotalPoints'](workshop);
-      expect(workshop.totalPoints).toBe(45);
+      expect((workshop as unknown as { totalPoints: number }).totalPoints).toBe(45);
     });
 
     it('sets 0 for empty steps', () => {
-      const workshop = { steps: [], totalPoints: 99 } as never;
+      const workshop = { steps: [], totalPoints: 99 } as unknown as WorkshopDocument;
       service['recalcTotalPoints'](workshop);
-      expect(workshop.totalPoints).toBe(0);
+      expect((workshop as unknown as { totalPoints: number }).totalPoints).toBe(0);
     });
   });
 
