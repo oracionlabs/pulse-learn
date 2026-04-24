@@ -1,6 +1,6 @@
 [build]
-builder = "dockerfile"
-dockerfilePath = "apps/api/Dockerfile"
+builder = "nixpacks"
+buildCommand = "pnpm install --frozen-lockfile && pnpm --filter api build"
 
 [deploy]
 startCommand = "node apps/api/dist/main"
