@@ -1,3 +1,4 @@
+import { join } from 'path'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -26,7 +27,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [configuration], envFilePath: ['.env', 'apps/api/.env'] }),
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration], envFilePath: join(__dirname, '..', '.env') }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
