@@ -26,7 +26,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration], envFilePath: ['.env', 'apps/api/.env'] }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
