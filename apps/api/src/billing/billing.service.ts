@@ -1,14 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const StripeLib = require('stripe');
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
 type StripeInstance = Record<string, unknown> & {
-  checkout: { sessions: { create: (p: unknown) => Promise<{ url: string | null }> } };
-  webhooks: { constructEvent: (p: Buffer, s: string, sec: string) => { type: string; data: { object: unknown } } };
+  checkout: {
+    sessions: { create: (p: unknown) => Promise<{ url: string | null }> };
+  };
+  webhooks: {
+    constructEvent: (
+      p: Buffer,
+      s: string,
+      sec: string,
+    ) => { type: string; data: { object: unknown } };
+  };
 };
 import {
   Organization,

@@ -63,9 +63,7 @@ const MOCK_MICROSOFT_USERS: ProviderUser[] = [
 export class SsoService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  private fetchProviderUsers(
-    provider: 'google' | 'microsoft',
-  ): ProviderUser[] {
+  private fetchProviderUsers(provider: 'google' | 'microsoft'): ProviderUser[] {
     // In production: call real API here and map to ProviderUser[]
     return provider === 'google' ? MOCK_GOOGLE_USERS : MOCK_MICROSOFT_USERS;
   }
