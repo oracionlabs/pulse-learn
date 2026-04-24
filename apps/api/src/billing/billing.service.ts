@@ -3,9 +3,13 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
-import type Stripe from 'stripe';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const StripeLib = require('stripe');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+type StripeInstance = Record<string, unknown> & {
+  checkout: { sessions: { create: (p: unknown) => Promise<{ url: string | null }> } };
+  webhooks: { constructEvent: (p: Buffer, s: string, sec: string) => { type: string; data: { object: unknown } } };
+};
 import {
   Organization,
   type OrganizationDocument,
@@ -19,7 +23,7 @@ const PLAN_PRICES: Record<string, string> = {
 
 @Injectable()
 export class BillingService {
-  private stripe!: Stripe;
+  private stripe!: StripeInstance;
 
   constructor(
     @InjectModel(Organization.name)
@@ -28,7 +32,7 @@ export class BillingService {
   ) {
     this.stripe = new StripeLib(
       config.get<string>('stripe.secretKey') ?? 'sk_test_placeholder',
-    ) as Stripe;
+    ) as StripeInstance;
   }
 
   async createCheckoutSession(orgId: string, plan: string, returnUrl: string) {

@@ -65,13 +65,13 @@ export class SsoService {
 
   private fetchProviderUsers(
     provider: 'google' | 'microsoft',
-  ): Promise<ProviderUser[]> {
+  ): ProviderUser[] {
     // In production: call real API here and map to ProviderUser[]
     return provider === 'google' ? MOCK_GOOGLE_USERS : MOCK_MICROSOFT_USERS;
   }
 
   async sync(orgId: string, provider: 'google' | 'microsoft') {
-    const providerUsers = await this.fetchProviderUsers(provider);
+    const providerUsers = this.fetchProviderUsers(provider);
     const orgObjectId = new Types.ObjectId(orgId);
 
     const existing = await this.userModel.find({
