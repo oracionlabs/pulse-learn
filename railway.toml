@@ -6,8 +6,5 @@ dockerfilePath = "apps/api/Dockerfile"
 startCommand = "node apps/api/dist/main"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
-
-[[deploy.healthchecks]]
-type = "http"
-path = "/health"
-timeout = 30
+healthcheckPath = "/health"
+healthcheckTimeout = 30
