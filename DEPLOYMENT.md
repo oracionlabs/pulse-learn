@@ -43,6 +43,9 @@ startCommand = "node apps/api/dist/main"
 ### Railway — `railway.toml` location
 Place `railway.toml` in `apps/api/`, not the repo root. Railway reads it from the service's configured root directory.
 
+### Stripe v22 — constructor throws on invalid key
+Stripe v22 validates the API key format at instantiation time. Never pass a placeholder — only call `new StripeLib(key)` when `key.startsWith('sk_')`. All billing methods fall back to mock mode when `this.stripe` is null.
+
 ### Stripe — import via `require()`, not ESM
 ```ts
 // eslint-disable-next-line @typescript-eslint/no-require-imports
