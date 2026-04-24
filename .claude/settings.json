@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm --filter *)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm seed *)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm dev *)",
+      "Bash(pnpm run *)",
+      "Bash(pnpm exec *)",
+      "Bash(pnpm install *)",
+      "Bash(docker compose up *)",
+      "Bash(docker compose down *)",
+      "Bash(docker compose logs *)",
+      "Bash(pkill -f *)",
+      "Bash(kill *)",
+      "Bash(curl -s *)",
+      "Bash(curl --compressed *)",
+      "Bash(mkdir -p *)",
+      "Bash(npm install *)"
+    ],
+    "deny": []
+  }
+}
