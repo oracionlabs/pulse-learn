@@ -10,3 +10,4 @@ build/
 .turbo/
 coverage/
 .nyc_output/
+plan.md

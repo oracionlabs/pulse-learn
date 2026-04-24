@@ -271,6 +271,16 @@ The CI pipeline runs on every push to `main` or `develop`:
 
 ---
 
+## Development
+
+This project was built with AI-assisted development using [Claude](https://claude.ai) (Anthropic). Claude was used to accelerate implementation across the full stack — API modules, frontend pages, tests, CI/CD pipeline, and deployment configuration. All product decisions, architecture direction, and quality review were human-led.
+
+**Development time:** Under 1 day (vs. an estimated 10-week manual build)
+
+> **Disclaimer:** This codebase was produced with significant AI assistance. It is provided as-is. Conduct your own security review before deploying to production with real user data.
+
+---
+
 ## License
 
 MIT
