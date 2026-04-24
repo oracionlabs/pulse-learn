@@ -1,15 +1,15 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator'
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class RespondDto {
   @IsString()
-  stepId: string
+  stepId: string;
 
   @IsString()
-  stepType: string
+  stepType: string;
 
-  answer: unknown
+  answer: unknown;
 
   @IsNumber()
   @IsOptional()
-  timeSpentSeconds?: number
+  timeSpentSeconds?: number;
 }

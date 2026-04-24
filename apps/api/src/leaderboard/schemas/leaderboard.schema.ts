@@ -1,50 +1,51 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document, Types } from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-export type LeaderboardEntryDocument = LeaderboardEntry & Document
+export type LeaderboardEntryDocument = LeaderboardEntry & Document;
 
 @Schema({ timestamps: true })
 export class LeaderboardEntry {
   @Prop({ type: Types.ObjectId, ref: 'Organization', required: true })
-  orgId: Types.ObjectId
+  orgId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId
+  userId: Types.ObjectId;
 
   @Prop({ default: 0 })
-  totalScore: number
+  totalScore: number;
 
   @Prop({ default: 0 })
-  workshopsCompleted: number
+  workshopsCompleted: number;
 
   @Prop({ default: 0 })
-  questionsCorrect: number
+  questionsCorrect: number;
 
   @Prop({ default: 0 })
-  questionsTotal: number
+  questionsTotal: number;
 
   @Prop({ default: 0 })
-  currentStreak: number
+  currentStreak: number;
 
   @Prop({ default: 0 })
-  longestStreak: number
+  longestStreak: number;
 
   @Prop()
-  lastActivityAt: Date
+  lastActivityAt: Date;
 
   @Prop({ default: 0 })
-  rank: number
+  rank: number;
 
   @Prop({ default: 0 })
-  previousRank: number
+  previousRank: number;
 
   @Prop({
     type: [{ type: String, earnedAt: Date }],
     default: [],
   })
-  badges: unknown[]
+  badges: unknown[];
 }
 
-export const LeaderboardEntrySchema = SchemaFactory.createForClass(LeaderboardEntry)
-LeaderboardEntrySchema.index({ orgId: 1, totalScore: -1 })
-LeaderboardEntrySchema.index({ orgId: 1, userId: 1 }, { unique: true })
+export const LeaderboardEntrySchema =
+  SchemaFactory.createForClass(LeaderboardEntry);
+LeaderboardEntrySchema.index({ orgId: 1, totalScore: -1 });
+LeaderboardEntrySchema.index({ orgId: 1, userId: 1 }, { unique: true });

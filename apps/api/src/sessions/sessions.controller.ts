@@ -1,9 +1,9 @@
-import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common'
-import { SessionsService } from './sessions.service'
-import { CurrentUser } from '../common/decorators/current-user.decorator'
-import { Roles } from '../common/decorators/roles.decorator'
-import { StartSessionDto } from './dto/start-session.dto'
-import { RespondDto } from './dto/respond.dto'
+import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common';
+import { SessionsService } from './sessions.service';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
+import { StartSessionDto } from './dto/start-session.dto';
+import { RespondDto } from './dto/respond.dto';
 
 @Controller()
 export class SessionsController {
@@ -14,7 +14,12 @@ export class SessionsController {
     @CurrentUser() user: { _id: string; orgId: string },
     @Body() dto: StartSessionDto,
   ) {
-    return this.sessionsService.start(user._id, user.orgId, dto.workshopId, dto.assignmentId)
+    return this.sessionsService.start(
+      user._id,
+      user.orgId,
+      dto.workshopId,
+      dto.assignmentId,
+    );
   }
 
   @Post('sessions/:sessionId/respond')
@@ -23,7 +28,7 @@ export class SessionsController {
     @CurrentUser() user: { _id: string },
     @Body() dto: RespondDto,
   ) {
-    return this.sessionsService.respond(sessionId, user._id, dto)
+    return this.sessionsService.respond(sessionId, user._id, dto);
   }
 
   @Post('sessions/:sessionId/complete')
@@ -31,7 +36,7 @@ export class SessionsController {
     @Param('sessionId') sessionId: string,
     @CurrentUser() user: { _id: string },
   ) {
-    return this.sessionsService.complete(sessionId, user._id)
+    return this.sessionsService.complete(sessionId, user._id);
   }
 
   @Get('sessions/:sessionId')
@@ -39,12 +44,12 @@ export class SessionsController {
     @Param('sessionId') sessionId: string,
     @CurrentUser() user: { _id: string },
   ) {
-    return this.sessionsService.getSession(sessionId, user._id)
+    return this.sessionsService.getSession(sessionId, user._id);
   }
 
   @Get('users/me/sessions')
   getMyHistory(@CurrentUser() user: { _id: string }) {
-    return this.sessionsService.getMyHistory(user._id)
+    return this.sessionsService.getMyHistory(user._id);
   }
 
   @Get('orgs/:orgId/leaderboard')
@@ -53,6 +58,9 @@ export class SessionsController {
     @Param('orgId') orgId: string,
     @Query('limit') limit?: string,
   ) {
-    return this.sessionsService.getLeaderboard(orgId, limit ? parseInt(limit, 10) : 20)
+    return this.sessionsService.getLeaderboard(
+      orgId,
+      limit ? parseInt(limit, 10) : 20,
+    );
   }
 }

@@ -1,15 +1,15 @@
-import { Injectable, BadRequestException } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model, Types } from 'mongoose'
-import { ConfigService } from '@nestjs/config'
-import * as crypto from 'crypto'
-import * as bcrypt from 'bcryptjs'
-import { Resend } from 'resend'
-import { User, type UserDocument } from './schemas/user.schema'
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
+import * as bcrypt from 'bcryptjs';
+import { Resend } from 'resend';
+import { User, type UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class InviteService {
-  private resend: Resend
+  private resend: Resend;
 
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -17,18 +17,24 @@ export class InviteService {
   ) {
     // Resend requires a non-empty key; use a placeholder so it constructs OK
     // Actual sends are gated on the key being a real value later
-    const apiKey = config.get<string>('resend.apiKey') || 're_dev_placeholder_key'
-    this.resend = new Resend(apiKey)
+    const apiKey =
+      config.get<string>('resend.apiKey') || 're_dev_placeholder_key';
+    this.resend = new Resend(apiKey);
   }
 
-  async inviteUser(orgId: string, invitedBy: string, data: { email: string; name: string; role: string }) {
+  async inviteUser(
+    orgId: string,
+    invitedBy: string,
+    data: { email: string; name: string; role: string },
+  ) {
     const existing = await this.userModel.findOne({
       email: data.email.toLowerCase(),
       orgId: new Types.ObjectId(orgId),
-    })
-    if (existing) throw new BadRequestException('User already exists in this organization')
+    });
+    if (existing)
+      throw new BadRequestException('User already exists in this organization');
 
-    const token = crypto.randomBytes(32).toString('hex')
+    const token = crypto.randomBytes(32).toString('hex');
 
     const user = await this.userModel.create({
       orgId: new Types.ObjectId(orgId),
@@ -38,13 +44,14 @@ export class InviteService {
       status: 'invited',
       inviteToken: token,
       passwordHash: 'PENDING',
-    })
+    });
 
-    const frontendUrl = this.config.get<string>('frontendUrl') ?? 'http://localhost:3000'
-    const inviteLink = `${frontendUrl}/invite?token=${token}`
+    const frontendUrl =
+      this.config.get<string>('frontendUrl') ?? 'http://localhost:3000';
+    const inviteLink = `${frontendUrl}/invite?token=${token}`;
 
     // Send email if Resend key is configured
-    const apiKey = this.config.get<string>('resend.apiKey')
+    const apiKey = this.config.get<string>('resend.apiKey');
     if (apiKey && !apiKey.startsWith('re_placeholder')) {
       await this.resend.emails.send({
         from: this.config.get<string>('resend.from') ?? 'noreply@pulse.app',
@@ -61,23 +68,32 @@ export class InviteService {
             <p style="color:#666;font-size:12px">Link expires in 72 hours.</p>
           </div>
         `,
-      })
+      });
     }
 
-    return { _id: user._id, email: user.email, name: user.name, status: user.status, inviteLink }
+    return {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      status: user.status,
+      inviteLink,
+    };
   }
 
   async acceptInvite(token: string, password: string) {
-    const user = await this.userModel.findOne({ inviteToken: token, status: 'invited' })
-    if (!user) throw new BadRequestException('Invalid or expired invite token')
+    const user = await this.userModel.findOne({
+      inviteToken: token,
+      status: 'invited',
+    });
+    if (!user) throw new BadRequestException('Invalid or expired invite token');
 
-    const hash = await bcrypt.hash(password, 12)
+    const hash = await bcrypt.hash(password, 12);
 
-    user.passwordHash = hash
-    user.status = 'active'
-    user.inviteToken = undefined as unknown as string
-    await user.save()
+    user.passwordHash = hash;
+    user.status = 'active';
+    user.inviteToken = undefined;
+    await user.save();
 
-    return { message: 'Account activated successfully' }
+    return { message: 'Account activated successfully' };
   }
 }

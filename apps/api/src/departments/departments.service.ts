@@ -1,28 +1,35 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model, Types } from 'mongoose'
-import { Department, type DepartmentDocument } from './department.schema'
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Department, type DepartmentDocument } from './department.schema';
 
 @Injectable()
 export class DepartmentsService {
-  constructor(@InjectModel(Department.name) private deptModel: Model<DepartmentDocument>) {}
+  constructor(
+    @InjectModel(Department.name) private deptModel: Model<DepartmentDocument>,
+  ) {}
 
   findAll(orgId: string) {
     return this.deptModel
       .find({ orgId: new Types.ObjectId(orgId) })
       .populate('managerId', 'name email')
-      .sort({ name: 1 })
+      .sort({ name: 1 });
   }
 
-  async create(orgId: string, body: { name: string; managerId?: string; parentDepartmentId?: string }) {
+  async create(
+    orgId: string,
+    body: { name: string; managerId?: string; parentDepartmentId?: string },
+  ) {
     return this.deptModel.create({
       orgId: new Types.ObjectId(orgId),
       name: body.name,
-      managerId: body.managerId ? new Types.ObjectId(body.managerId) : undefined,
+      managerId: body.managerId
+        ? new Types.ObjectId(body.managerId)
+        : undefined,
       parentDepartmentId: body.parentDepartmentId
         ? new Types.ObjectId(body.parentDepartmentId)
         : undefined,
-    })
+    });
   }
 
   async update(
@@ -44,17 +51,18 @@ export class DepartmentsService {
         }),
       },
       { new: true },
-    )
-    if (!dept) throw new NotFoundException('Department not found')
-    return dept
+    );
+    if (!dept) throw new NotFoundException('Department not found');
+    return dept;
   }
 
   async remove(orgId: string, deptId: string) {
     const result = await this.deptModel.deleteOne({
       _id: deptId,
       orgId: new Types.ObjectId(orgId),
-    })
-    if (!result.deletedCount) throw new NotFoundException('Department not found')
-    return { deleted: true }
+    });
+    if (!result.deletedCount)
+      throw new NotFoundException('Department not found');
+    return { deleted: true };
   }
 }

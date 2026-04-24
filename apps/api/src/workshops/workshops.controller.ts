@@ -8,11 +8,11 @@ import {
   Param,
   Patch,
   Query,
-} from '@nestjs/common'
-import { WorkshopsService } from './workshops.service'
-import { CurrentUser } from '../common/decorators/current-user.decorator'
-import { Roles } from '../common/decorators/roles.decorator'
-import { Public } from '../common/decorators/public.decorator'
+} from '@nestjs/common';
+import { WorkshopsService } from './workshops.service';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Public } from '../common/decorators/public.decorator';
 
 @Controller()
 export class WorkshopsController {
@@ -22,7 +22,7 @@ export class WorkshopsController {
   @Get('workshops')
   @Public()
   getTemplates() {
-    return this.workshopsService.findTemplates()
+    return this.workshopsService.findTemplates();
   }
 
   // Org workshops
@@ -36,7 +36,7 @@ export class WorkshopsController {
       orgId,
       page ? parseInt(page, 10) : 1,
       limit ? parseInt(limit, 10) : 20,
-    )
+    );
   }
 
   @Post('orgs/:orgId/workshops')
@@ -46,12 +46,12 @@ export class WorkshopsController {
     @CurrentUser() user: { _id: string },
     @Body() dto: Record<string, unknown>,
   ) {
-    return this.workshopsService.create(orgId, user._id, dto as never)
+    return this.workshopsService.create(orgId, user._id, dto);
   }
 
   @Get('orgs/:orgId/workshops/:workshopId')
   findOne(@Param('workshopId') id: string) {
-    return this.workshopsService.findOne(id)
+    return this.workshopsService.findOne(id);
   }
 
   @Put('orgs/:orgId/workshops/:workshopId')
@@ -61,25 +61,25 @@ export class WorkshopsController {
     @Param('workshopId') id: string,
     @Body() dto: Record<string, unknown>,
   ) {
-    return this.workshopsService.update(id, orgId, dto as never)
+    return this.workshopsService.update(id, orgId, dto);
   }
 
   @Delete('orgs/:orgId/workshops/:workshopId')
   @Roles('org_admin', 'manager')
   remove(@Param('orgId') orgId: string, @Param('workshopId') id: string) {
-    return this.workshopsService.remove(id, orgId)
+    return this.workshopsService.remove(id, orgId);
   }
 
   @Post('orgs/:orgId/workshops/:workshopId/publish')
   @Roles('org_admin', 'manager')
   publish(@Param('orgId') orgId: string, @Param('workshopId') id: string) {
-    return this.workshopsService.publish(id, orgId)
+    return this.workshopsService.publish(id, orgId);
   }
 
   @Post('orgs/:orgId/workshops/:workshopId/unpublish')
   @Roles('org_admin', 'manager')
   unpublish(@Param('orgId') orgId: string, @Param('workshopId') id: string) {
-    return this.workshopsService.unpublish(id, orgId)
+    return this.workshopsService.unpublish(id, orgId);
   }
 
   @Post('orgs/:orgId/workshops/:workshopId/clone')
@@ -89,7 +89,7 @@ export class WorkshopsController {
     @Param('workshopId') templateId: string,
     @CurrentUser() user: { _id: string },
   ) {
-    return this.workshopsService.cloneTemplate(templateId, orgId, user._id)
+    return this.workshopsService.cloneTemplate(templateId, orgId, user._id);
   }
 
   // Steps
@@ -100,7 +100,7 @@ export class WorkshopsController {
     @Param('workshopId') workshopId: string,
     @Body() dto: Record<string, unknown>,
   ) {
-    return this.workshopsService.addStep(workshopId, orgId, dto)
+    return this.workshopsService.addStep(workshopId, orgId, dto);
   }
 
   @Put('orgs/:orgId/workshops/:workshopId/steps/:stepId')
@@ -111,7 +111,7 @@ export class WorkshopsController {
     @Param('stepId') stepId: string,
     @Body() dto: Record<string, unknown>,
   ) {
-    return this.workshopsService.updateStep(workshopId, orgId, stepId, dto)
+    return this.workshopsService.updateStep(workshopId, orgId, stepId, dto);
   }
 
   @Delete('orgs/:orgId/workshops/:workshopId/steps/:stepId')
@@ -121,7 +121,7 @@ export class WorkshopsController {
     @Param('workshopId') workshopId: string,
     @Param('stepId') stepId: string,
   ) {
-    return this.workshopsService.deleteStep(workshopId, orgId, stepId)
+    return this.workshopsService.deleteStep(workshopId, orgId, stepId);
   }
 
   @Patch('orgs/:orgId/workshops/:workshopId/steps/reorder')
@@ -131,6 +131,10 @@ export class WorkshopsController {
     @Param('workshopId') workshopId: string,
     @Body() body: { orderedStepIds: string[] },
   ) {
-    return this.workshopsService.reorderSteps(workshopId, orgId, body.orderedStepIds)
+    return this.workshopsService.reorderSteps(
+      workshopId,
+      orgId,
+      body.orderedStepIds,
+    );
   }
 }

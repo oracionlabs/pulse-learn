@@ -1,10 +1,10 @@
-import { IsString, IsOptional } from 'class-validator'
+import { IsString, IsOptional } from 'class-validator';
 
 export class StartSessionDto {
   @IsString()
-  workshopId: string
+  workshopId: string;
 
   @IsString()
   @IsOptional()
-  assignmentId?: string
+  assignmentId?: string;
 }

@@ -85,6 +85,7 @@ export default function WorkshopEditPage({
 
   useEffect(() => {
     if (workshop) {
+      // eslint-disable-next-line
       setMetadata({
         title: workshop.title,
         description: workshop.description,

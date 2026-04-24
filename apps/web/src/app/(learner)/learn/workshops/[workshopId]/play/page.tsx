@@ -82,7 +82,7 @@ export default function PlayPage({ params }: { params: Promise<{ workshopId: str
   const [lastResult, setLastResult] = useState<RespondResult | null>(null)
   const [answered, setAnswered] = useState(false)
   const [done, setDone] = useState(false)
-  const stepStartTime = useRef(Date.now())
+  const stepStartTime = useRef<number>(0)
 
   // Fetch workshop
   const { data: workshop, isLoading } = useQuery<Workshop>({
@@ -109,6 +109,10 @@ export default function PlayPage({ params }: { params: Promise<{ workshopId: str
       setStepIndex(s.currentStepIndex)
     },
   })
+
+  useEffect(() => {
+    stepStartTime.current = Date.now()
+  }, [stepIndex])
 
   useEffect(() => {
     if (!token || !orgId) return

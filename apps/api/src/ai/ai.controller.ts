@@ -1,6 +1,6 @@
-import { Controller, Post, Param, Body } from '@nestjs/common'
-import { AiService } from './ai.service'
-import { Roles } from '../common/decorators/roles.decorator'
+import { Controller, Post, Body } from '@nestjs/common';
+import { AiService } from './ai.service';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('orgs/:orgId/ai')
 export class AiController {
@@ -11,12 +11,12 @@ export class AiController {
   generateWorkshop(
     @Body()
     body: {
-      topic: string
-      vertical: string
-      difficulty: string
-      stepCount?: number
-      includeQuiz?: boolean
-      includeScenario?: boolean
+      topic: string;
+      vertical: string;
+      difficulty: string;
+      stepCount?: number;
+      includeQuiz?: boolean;
+      includeScenario?: boolean;
     },
   ) {
     return this.aiService.generateWorkshop({
@@ -26,6 +26,6 @@ export class AiController {
       stepCount: body.stepCount ?? 5,
       includeQuiz: body.includeQuiz ?? true,
       includeScenario: body.includeScenario ?? true,
-    })
+    });
   }
 }

@@ -1,47 +1,47 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document, Types } from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-export type NotificationDocument = Notification & Document
+export type NotificationDocument = Notification & Document;
 
 @Schema({ timestamps: true })
 export class Notification {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId
+  userId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Organization', required: true })
-  orgId: Types.ObjectId
+  orgId: Types.ObjectId;
 
   @Prop({
     enum: ['assignment', 'reminder', 'completion', 'streak', 'badge', 'system'],
     required: true,
   })
-  type: string
+  type: string;
 
   @Prop({ required: true })
-  title: string
+  title: string;
 
   @Prop({ required: true })
-  body: string
+  body: string;
 
   @Prop()
-  link?: string
+  link?: string;
 
   @Prop({ enum: ['in_app', 'email', 'both'], default: 'both' })
-  channel: string
+  channel: string;
 
   @Prop({ default: false })
-  read: boolean
+  read: boolean;
 
   @Prop()
-  readAt?: Date
+  readAt?: Date;
 
   @Prop({ default: false })
-  emailSent: boolean
+  emailSent: boolean;
 
   @Prop()
-  emailSentAt?: Date
+  emailSentAt?: Date;
 }
 
-export const NotificationSchema = SchemaFactory.createForClass(Notification)
-NotificationSchema.index({ userId: 1, read: 1 })
-NotificationSchema.index({ userId: 1, createdAt: -1 })
+export const NotificationSchema = SchemaFactory.createForClass(Notification);
+NotificationSchema.index({ userId: 1, read: 1 });
+NotificationSchema.index({ userId: 1, createdAt: -1 });

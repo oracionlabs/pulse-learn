@@ -105,7 +105,7 @@ async function seed() {
     updatedAt: new Date(),
   });
 
-  const globexAdmin = await db.collection('users').insertOne({
+  await db.collection('users').insertOne({
     orgId: globex.insertedId,
     email: 'admin@globex.com',
     passwordHash,

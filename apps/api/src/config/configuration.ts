@@ -27,4 +27,4 @@ export default () => ({
     apiKey: process.env.ANTHROPIC_API_KEY ?? '',
   },
   frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000',
-})
+});

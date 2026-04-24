@@ -1,7 +1,7 @@
-import { Controller, Get } from '@nestjs/common'
-import { Public } from '../common/decorators/public.decorator'
-import { InjectConnection } from '@nestjs/mongoose'
-import { Connection } from 'mongoose'
+import { Controller, Get } from '@nestjs/common';
+import { Public } from '../common/decorators/public.decorator';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 
 @Controller('health')
 export class HealthController {
@@ -13,7 +13,8 @@ export class HealthController {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       db: this.connection.readyState === 1 ? 'connected' : 'disconnected',
-    }
+    };
   }
 }

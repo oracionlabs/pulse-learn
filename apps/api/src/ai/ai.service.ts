@@ -1,33 +1,34 @@
-import { Injectable, BadRequestException } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import Anthropic from '@anthropic-ai/sdk'
-import { v4 as uuidv4 } from 'uuid'
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import Anthropic from '@anthropic-ai/sdk';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AiService {
-  private client: Anthropic
-  private configured: boolean
+  private client: Anthropic;
+  private configured: boolean;
 
   constructor(private config: ConfigService) {
-    const apiKey = config.get<string>('anthropic.apiKey')
-    this.configured = !!apiKey
-    this.client = new Anthropic({ apiKey: apiKey ?? 'placeholder' })
+    const apiKey = config.get<string>('anthropic.apiKey');
+    this.configured = !!apiKey;
+    this.client = new Anthropic({ apiKey: apiKey ?? 'placeholder' });
   }
 
   async generateWorkshop(prompt: {
-    topic: string
-    vertical: string
-    difficulty: string
-    stepCount: number
-    includeQuiz: boolean
-    includeScenario: boolean
+    topic: string;
+    vertical: string;
+    difficulty: string;
+    stepCount: number;
+    includeQuiz: boolean;
+    includeScenario: boolean;
   }) {
-    if (!this.configured) throw new BadRequestException('Anthropic API key not configured')
+    if (!this.configured)
+      throw new BadRequestException('Anthropic API key not configured');
 
-    const stepTypes = ['content']
-    if (prompt.includeQuiz) stepTypes.push('quiz')
-    if (prompt.includeScenario) stepTypes.push('scenario')
-    stepTypes.push('reflection')
+    const stepTypes = ['content'];
+    if (prompt.includeQuiz) stepTypes.push('quiz');
+    if (prompt.includeScenario) stepTypes.push('scenario');
+    stepTypes.push('reflection');
 
     const response = await this.client.messages.create({
       model: 'claude-opus-4-7',
@@ -92,24 +93,24 @@ Return ONLY valid JSON exactly matching this schema:
 }`,
         },
       ],
-    })
+    });
 
-    const textBlock = response.content.find((b) => b.type === 'text')
+    const textBlock = response.content.find((b) => b.type === 'text');
     if (!textBlock || textBlock.type !== 'text') {
-      throw new Error('No text response from Claude')
+      throw new Error('No text response from Claude');
     }
 
     const parsed = JSON.parse(textBlock.text) as {
-      title: string
-      description: string
-      steps: Record<string, unknown>[]
-    }
+      title: string;
+      description: string;
+      steps: Record<string, unknown>[];
+    };
 
     const steps = (parsed.steps ?? []).map((s, i) => ({
       ...s,
       stepId: uuidv4(),
       order: i,
-    }))
+    }));
 
     return {
       title: parsed.title ?? prompt.topic,
@@ -118,9 +119,10 @@ Return ONLY valid JSON exactly matching this schema:
       difficulty: prompt.difficulty,
       steps,
       totalPoints: steps.reduce(
-        (sum, s) => sum + (((s as Record<string, unknown>).points as number) ?? 0),
+        (sum, s) =>
+          sum + (((s as Record<string, unknown>).points as number) ?? 0),
         0,
       ),
-    }
+    };
   }
 }
